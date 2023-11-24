@@ -4,6 +4,8 @@ Iris is a P2P system for collaborative defense proposed by Bc. Martin Řepa as a
 This repository hosts a reference implementation written in Golang using [LibP2P project](https://github.com/libp2p) along with integration of Iris
 into [Slips IPS](https://github.com/draliii/StratosphereLinuxIPS) and [Fides Trust Model](https://github.com/lukasforst/fides). 
 
+This project is funded by [NlNet NGI Zero Entrust](https://nlnet.nl/project/Iris-P2P/)
+
 For more details regarding architecture/implementation, we refer reader to [docs/architecture.md](docs/architecture.md) or the thesis itself.
 
 ### Motivation 
