@@ -1,12 +1,13 @@
 # Iris: A Global P2P network for Sharing Threat Intelligence
 
-Iris is a P2P system for collaborative defense proposed by Bc. Martin Řepa as a [diploma thesis work](https://www.stratosphereips.org/thesis-projects-list/2022/3/12/global-permissionless-p2p-system-for-sharing-distributed-threat-intelligence).
-This repository hosts a reference implementation written in Golang using [LibP2P project](https://github.com/libp2p) along with integration of Iris
-into [Slips IPS](https://github.com/draliii/StratosphereLinuxIPS) and [Fides Trust Model](https://github.com/lukasforst/fides). 
+Iris is a P2P system for collaborative defense proposed by Bc. Martin Řepa developed for Stratosphere lab during his [diploma thesis work](https://www.stratosphereips.org/thesis-projects-list/2022/3/12/global-permissionless-p2p-system-for-sharing-distributed-threat-intelligence).
+
+This repository hosts a reference implementation written in Golang using [LibP2P project](https://github.com/libp2p) along with integration of Iris into [Slips IPS](https://github.com/draliii/StratosphereLinuxIPS) and [Fides Trust Model](https://github.com/lukasforst/fides). 
 
 This project is funded by [NlNet NGI Zero Entrust](https://nlnet.nl/project/Iris-P2P/)
 
-For more details regarding architecture/implementation, we refer the reader to [docs/architecture.md](docs/architecture.md) or the thesis itself.
+
+For more details regarding design please see [Design](docs/Design.md). For the architecture/implementation, we refer the reader to [Architecture](docs/architecture.md) or the thesis itself.
 
 ### Motivation 
 
@@ -33,8 +34,7 @@ To run a standalone peer, you need:
 
 ### OrgSig Tool
 
-For pleasure manipulation with organizations, we present a tool called **orgsig**. Orgsig is a small program written in Golang
-that can generate organizations or sign existing peers ID using already generated organisations.
+To manage the P2P TI sharing withing an organization, we developed a tool called **orgsig**. Orgsig is a small program written in Golang that can generate organizations or sign existing peers ID using the already generated organisations.
 
 ```bash
 > make orgsig 
@@ -56,37 +56,32 @@ Usage of ./orgsig:
 
 ### Running a Peer
 
-Starting a peer with reference configuration is as simple as running (assuming a Redis instance is running on local host):
+Starting a peer with reference configuration is as simple as running (assuming a Redis instance is running on the localhost):
 
 > make run
 
 ### Debugging, Running Multiple Peers
 
-To run silmutaniously multiple peers, you can use already prepared docker-compose file with pre-configured 4 peers.
+To run multiple peers simultaneously, you can use an already prepared docker-compose file with pre-configured 4 peers.
 The network of 4 peers can be started with (note that you must have `docker` and `docker-compose` installed):
 
 ```bash
 > make network
 ```
 
-This command starts docker-compose with 4 peers in separate containers and one container with separate Redis instance. 
-Every peer connects to a different Redis channel and waits for messages from Fides (Fides mock has not yet been implemented). 
-The peers will connect to each other and thus form a small network. 
-Configuration files of every peer can be found in [dev/](dev) directory. 
-To interact with the peers, you must act as Fides Trust Model and send to the peers manually a message by publishing some 
-messages through Redis channels. Example PUBLISH commands can be found in [dev/redisobj.dev](dev/redisobj.dev).
+This command starts docker-compose with 4 peers in separate containers and one container with a separate Redis instance. 
+Every peer connects to a different Redis channel and waits for messages from Fides. The peers will connect to each other and thus form a small network. The configuration files of every peer can be found in the [dev/](dev) directory. 
+
+To interact with the peers, you must act as Fides Trust Model and send the peers a manual message by publishing some of them through the Redis channels. Example PUBLISH commands can be found in [dev/redisobj.dev](dev/redisobj.dev).
 
 
 ## Todo/Future Work:
-* Fides Trust Model Mock for better testing and debugging
-* Complete reference integration of Iris, Fides and Slips inside docker-compose
 * Signal handling for graceful shutdown
-* After a peer connects to the network, search immediately for members of trustworthy organisations. So far only `connector` does it.
-* Implement message (bytes?) rate-limiting per individual peers to mitigate flooding attacks (or adaptive gossips?)
+* After a peer connects to the network, search immediately for members of trustworthy organisations. So far, only `connector` does it.
+* Implement message (bytes?) rate-limiting per individual peers to mitigate flooding attacks (or adaptive gossip?)
 * Use more the Reporting Protocol to report misbehaving peers
 * Implement purging of keys after some time (configurable?) in peers' message cache
-* responseStorage goroutines should not wait for responses from peers that disconnected during the waiting. Otherwise,
-when that happens it's gonna unnecessarily wait until the timeout occurs
+* responseStorage goroutines should not wait for responses from peers that disconnected during the waiting. Otherwise, when that happens, it's gonna unnecessarily wait until the timeout occurs
 * storageResponse goroutines should wait only for responses from peers where requests were successfully sent (err was nil)
 * implement purging of file metadata after files expire (viz currently not used field `ElapsedAt`)
-* Is reference basic manager really trimming peers based on their reliability? Need to be checked,
+* Is the reference basic manager really trimming peers based on their reliability? Need to be checked,
