@@ -16,4 +16,4 @@ To run the unit tests for Iris, follow these steps:
 * The unit tests run best with ```go v1.17```.
 * Go to the directory containing Iris code.
 * ```cd pkg```
-* ```go test ./...```
+* ```go test ./...``` 
